@@ -1,0 +1,84 @@
+{
+  "airport": {
+    "title": "Airport Pickup/Drop",
+    "icon": "plane",
+    "description": "Stress-free airport transfers, on time every time. Enjoy smooth commutes to and from airport terminals.",
+    "searchPlaceholder": "Search airports...",
+    "items": [
+      { "name": "Rajiv Gandhi International Airport", "city": "Hyderabad" },
+      { "name": "Vijayawada Airport (Gannavaram)", "city": "Vijayawada" },
+      { "name": "Visakhapatnam Airport", "city": "Visakhapatnam" },
+      { "name": "Rajamahendravaram Airport", "city": "Rajamahendravaram" }
+    ]
+  },
+  "localRides": {
+    "title": "Local City Rides",
+    "icon": "map-location-dot",
+    "description": "Explore the city with comfortable, private, and highly affordable point-to-point daily cab rides.",
+    "searchPlaceholder": "Search cities...",
+    "items": [
+      "Vijayawada",
+      "Hyderabad",
+      "Visakhapatnam",
+      "Guntur",
+      "Rajamahendravaram",
+      "Vuyyuru",
+      "Machilipatnam",
+      "Gudivada",
+      "Eluru",
+      "Challapalli",
+      "Avanigadda",
+      "Bhimavaram",
+      "Palakollu"
+    ]
+  },
+  "outstation": {
+    "title": "Outstation Trips",
+    "icon": "car-side",
+    "description": "Enjoy long drives, weekend getaways, and inter-city commutes with utmost safety, style and luxury.",
+    "searchPlaceholder": "Search destinations...",
+    "items": [
+      "Vijayawada",
+      "Hyderabad",
+      "Visakhapatnam",
+      "Guntur",
+      "Chennai",
+      "Tirupathi",
+      "Machilipatnam"
+    ]
+  },
+  "templePackages": {
+    "title": "Temple Packages",
+    "icon": "place-of-worship",
+    "description": "Spiritual journeys made easy and completely hassle-free. Guided round-trips to popular temples.",
+    "packages": [
+      {
+        "name": "Pancharamam Package",
+        "temples": [
+          "Amaravathi",
+          "Draksharamam",
+          "Somaramam (Bhimavaram)",
+          "Ksheerarama (Palakollu)",
+          "Kumararama (Samalkota)"
+        ]
+      },
+      {
+        "name": "Vijayawada Temple Package",
+        "temples": [
+          "Kanaka Durga Temple",
+          "Panakala Swamy Temple",
+          "TTD Temple Venkatapalem",
+          "Amaravathi Temple",
+          "Koti Lingala Temple"
+        ]
+      },
+      {
+        "name": "Hyderabad Temple Package (One Day)",
+        "temples": [
+          "Swarnagiri",
+          "Yadagiri Gutta"
+        ]
+      }
+    ]
+  }
+}

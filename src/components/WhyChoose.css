@@ -1,0 +1,133 @@
+/* ── WhyChoose ────────────────────────────────── */
+
+.wc-section {
+  padding: clamp(3rem, 6vw, 5rem) clamp(1rem, 4vw, 3rem);
+}
+
+/* ── Header ───────────────────────────────────── */
+
+.wc-header {
+  text-align: center;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.wc-title {
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0 0 1rem;
+}
+
+.wc-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.wc-divider-line {
+  width: 40px;
+  height: 2px;
+  background: var(--gold);
+  border-radius: 2px;
+}
+
+.wc-divider-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+/* ── Grid ─────────────────────────────────────── */
+
+.wc-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(1rem, 2vw, 1.5rem);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ── Card ─────────────────────────────────────── */
+
+.wc-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-left: 3px solid var(--border-gold);
+  border-radius: 12px;
+  padding: clamp(1.4rem, 2.5vw, 2rem);
+  transition: var(--transition);
+}
+
+.wc-card:hover {
+  border-color: var(--card-hover-border);
+  border-left-color: var(--gold);
+  background: var(--bg-card-hover);
+  transform: translateX(5px);
+}
+
+.wc-card-icon {
+  font-size: 1.9rem;
+  color: var(--gold);
+  margin-bottom: 0.8rem;
+  display: block;
+}
+
+.wc-card-title {
+  font-size: clamp(1rem, 1.3vw, 1.15rem);
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0 0 0.5rem;
+}
+
+.wc-card-desc {
+  font-size: clamp(0.85rem, 1vw, 0.95rem);
+  color: var(--text-sub);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Scroll reveal ────────────────────────────── */
+
+.wc-animate {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.wc-animate.wc-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Responsive ───────────────────────────────── */
+
+@media (max-width: 992px) {
+  .wc-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .wc-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .wc-card {
+    border-left: 1px solid var(--border-card);
+    border-top: 3px solid var(--border-gold);
+    text-align: center;
+  }
+
+  .wc-card:hover {
+    transform: translateY(-5px);
+    border-left-color: var(--card-hover-border);
+    border-top-color: var(--gold);
+  }
+
+  .wc-card-icon {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

@@ -1,0 +1,48 @@
+/* ── MobileCTA ─────────────────────────────────── */
+
+.mcta-bar {
+  display: none;
+}
+
+.mcta-spacer {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mcta-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    height: 56px;
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+    color: #ffffff;
+    font-size: clamp(0.95rem, 1.2vw, 1.05rem);
+    font-weight: 700;
+    text-decoration: none;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    letter-spacing: 0.3px;
+    min-height: 48px;
+    -webkit-tap-highlight-color: transparent;
+    transition: var(--transition);
+  }
+
+  .mcta-bar:active {
+    filter: brightness(0.92);
+  }
+
+  .mcta-bar i {
+    font-size: 1.3rem;
+  }
+
+  .mcta-spacer {
+    display: block;
+    height: 56px;
+    flex-shrink: 0;
+  }
+}

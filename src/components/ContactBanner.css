@@ -1,0 +1,190 @@
+/* ── ContactBanner ─────────────────────────────── */
+
+.cb-section {
+  padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 4vw, 3rem);
+}
+
+.cb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+  max-width: 1050px;
+  margin: 0 auto;
+}
+
+/* ── Card base ────────────────────────────────── */
+
+.cb-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+  padding: clamp(1.8rem, 3vw, 2.5rem) clamp(1rem, 2vw, 2rem);
+  border-radius: 16px;
+  border: 1px solid var(--border-card);
+  transition: var(--transition);
+  cursor: pointer;
+  min-height: 48px;
+}
+
+.cb-card--call {
+  background: linear-gradient(
+    168deg,
+    rgba(242, 201, 76, 0.06) 0%,
+    var(--bg-card) 50%
+  );
+}
+
+.cb-card--whatsapp {
+  background: linear-gradient(
+    168deg,
+    rgba(37, 211, 102, 0.06) 0%,
+    var(--bg-card) 50%
+  );
+}
+
+.cb-card--email {
+  background: linear-gradient(
+    168deg,
+    rgba(59, 130, 246, 0.06) 0%,
+    var(--bg-card) 50%
+  );
+}
+
+.cb-card:hover {
+  transform: translateY(-5px);
+}
+
+.cb-card--call:hover {
+  border-color: var(--card-hover-border);
+  box-shadow: 0 8px 32px var(--gold-glow);
+}
+
+.cb-card--whatsapp:hover {
+  border-color: rgba(37, 211, 102, 0.3);
+  box-shadow: 0 8px 32px var(--whatsapp-glow);
+}
+
+.cb-card--email:hover {
+  border-color: rgba(59, 130, 246, 0.3);
+  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.15);
+}
+
+/* ── Icon wrapper ─────────────────────────────── */
+
+.cb-icon-wrapper {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  margin-bottom: 1.2rem;
+}
+
+.cb-icon-wrapper--gold {
+  border: 2px solid var(--border-gold);
+  color: var(--gold);
+  background: rgba(242, 201, 76, 0.07);
+}
+
+.cb-icon-wrapper--green {
+  border: 2px solid rgba(37, 211, 102, 0.2);
+  color: var(--whatsapp);
+  background: rgba(37, 211, 102, 0.07);
+}
+
+.cb-icon-wrapper--blue {
+  border: 2px solid rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+  background: rgba(59, 130, 246, 0.07);
+}
+
+/* ── Typography ───────────────────────────────── */
+
+.cb-label {
+  font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+  color: var(--text-sub);
+  margin: 0 0 0.25rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.cb-subtitle {
+  font-size: clamp(0.85rem, 1.1vw, 0.95rem);
+  color: var(--text-muted);
+  margin: 0;
+  min-height: 2.2em; /* Ensure same height for alignment */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cb-highlight {
+  font-size: clamp(1.1rem, 1.6vw, 1.45rem);
+  font-weight: 700;
+  margin: 0.5rem 0;
+  word-break: break-all;
+}
+
+.cb-highlight--gold {
+  color: var(--gold);
+}
+
+.cb-highlight--green {
+  color: var(--whatsapp);
+}
+
+.cb-highlight--email {
+  color: #3b82f6;
+  font-size: clamp(13.5px, 1.3vw, 15.5px);
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+  word-break: break-all;
+  margin: 0.8rem 0;
+}
+
+.cb-action {
+  font-size: clamp(0.85rem, 1.1vw, 0.95rem);
+  color: var(--text-sub);
+  margin: 0;
+  font-weight: 500;
+}
+
+/* ── Scroll reveal animation ──────────────────── */
+
+.cb-animate {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.cb-animate.cb-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cb-grid .cb-animate:nth-child(2) {
+  transition-delay: 0.15s;
+}
+
+.cb-grid .cb-animate:nth-child(3) {
+  transition-delay: 0.3s;
+}
+
+/* ── Responsive ───────────────────────────────── */
+
+@media (max-width: 576px) {
+  .cb-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cb-card {
+    flex-direction: column;
+    align-items: center;
+  }
+}
