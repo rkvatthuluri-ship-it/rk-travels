@@ -105,7 +105,7 @@ export default function ChatbotWidget() {
     const newMessages = [...messages, { role: 'user', content: userText }];
     setMessages(newMessages);
 
-    const backendUrl = import.meta.env.VITE_CHATBACKEND_URL || '';
+    const backendUrl = import.meta.env.VITE_CHATBACKEND_URL || 'https://rk-travels-qmc8.onrender.com';
     const activeKey = apiKey || import.meta.env.VITE_OPENROUTER_API_KEY || '';
 
     // If no backend is configured AND no client key exists, block and prompt
