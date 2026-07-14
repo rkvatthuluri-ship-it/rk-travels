@@ -59,7 +59,6 @@
   border: 2px solid var(--bg-deep);
 }
 
-/* Chat Card Window */
 .chat-widget__card {
   position: fixed;
   right: 24px;
@@ -67,12 +66,10 @@
   width: 380px;
   height: 520px;
   max-height: calc(100dvh - 120px);
-  background: rgba(26, 26, 29, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: #141416;
   border: 1px solid var(--border-card);
   border-radius: 20px;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
   display: flex;
   flex-direction: column;
   overflow: hidden;

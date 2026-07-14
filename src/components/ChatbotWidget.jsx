@@ -225,15 +225,6 @@ export default function ChatbotWidget() {
             <div className="chat-widget__header-actions">
               <button
                 className="chat-widget__header-btn"
-                onClick={() => setShowSettings((prev) => !prev)}
-                title={t('Chat Settings')}
-                type="button"
-                aria-label="Settings"
-              >
-                <i className="fas fa-cog" />
-              </button>
-              <button
-                className="chat-widget__header-btn"
                 onClick={() => setIsOpen(false)}
                 title={t('Close Chat')}
                 type="button"
