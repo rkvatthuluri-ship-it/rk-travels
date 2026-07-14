@@ -33,9 +33,15 @@ export default function Hero() {
         <div className="hero-grid hero-reveal" ref={sectionRef}>
           {/* Left Column — Content */}
           <div className="hero-content">
-            <div className="hero-badge">
-              <i className="fas fa-star"></i>
-              RK Cabs
+            <div className="hero-badge-container">
+              <div className="hero-badge">
+                <i className="fas fa-star"></i>
+                RK Cabs
+              </div>
+              <div className="hero-badge hero-badge-special">
+                <i className="fas fa-plane"></i>
+                {t('Airport Transfer Specialists')}
+              </div>
             </div>
 
             <h1 className="hero-heading">
@@ -44,18 +50,22 @@ export default function Hero() {
             </h1>
 
             <p className="hero-description">
-              {t('Premium travel experiences with comfort, safety and reliability. Every mile, a promise of exceptional service.')}
+              {t('Premium travel experiences with comfort, safety and reliability. Specialized in seamless Airport Pickup & Drop services. Every mile, a promise of exceptional service.')}
             </p>
 
             {/* Added Features Deck for richer aesthetics */}
             <div className="hero-features-deck">
+              <div className="hero-feature-tag hero-feature-tag-special">
+                <i className="fas fa-plane-departure"></i>
+                <span>{t('Premium Hyderabad & Andhra Airport Cabs')}</span>
+              </div>
               <div className="hero-feature-tag">
                 <i className="fas fa-star"></i>
                 <span>{t('Top Rated Cab Service')}</span>
               </div>
               <div className="hero-feature-tag">
-                <i className="fas fa-shield-virus"></i>
-                <span>{t('Regularly Sanitized')}</span>
+                <i className="fas fa-shield-alt"></i>
+                <span>{t('500+ Safe Rides Completed')}</span>
               </div>
               <div className="hero-feature-tag">
                 <i className="fas fa-clock"></i>

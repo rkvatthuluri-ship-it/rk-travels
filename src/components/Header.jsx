@@ -16,7 +16,11 @@ export default function Header({ currentPath = '#/' }) {
   const { language, setLanguage, t } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('home');
+  const [activeSection, setActiveSection] = useState(() => {
+    if (currentPath === '#/about-us') return 'about-us';
+    const segment = currentPath.replace('#/', '');
+    return segment || 'services';
+  });
 
   const WHATSAPP_URL = WHATSAPP_BASE + encodeURIComponent('Hi RK Cabs! I would like to book a ride.');
 
@@ -24,6 +28,7 @@ export default function Header({ currentPath = '#/' }) {
 
   /* ---- Scroll listener: header shrink + active section ---- */
   useEffect(() => {
+    let isInitial = true;
     const handleScroll = () => {
       setScrolled(window.scrollY > 40);
 
@@ -31,22 +36,28 @@ export default function Header({ currentPath = '#/' }) {
       if (!isAboutRoute) {
         const homeSectionIds = ['home', 'services', 'fleet', 'contact'];
         const scrollPos = window.scrollY + 120; // offset for header height
+        
         let currentSec = 'home';
-
-        for (const id of homeSectionIds) {
-          const el = document.getElementById(id);
-          if (el && el.offsetTop <= scrollPos) {
-            currentSec = id;
+        const hashSegment = currentPath.replace('#/', '');
+        if (isInitial && window.scrollY === 0 && hashSegment && homeSectionIds.includes(hashSegment)) {
+          currentSec = hashSegment;
+        } else {
+          for (const id of homeSectionIds) {
+            const el = document.getElementById(id);
+            if (el && el.offsetTop <= scrollPos) {
+              currentSec = id;
+            }
           }
         }
         setActiveSection(currentSec);
+        isInitial = false;
       }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll(); // initial check
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [isAboutRoute]);
+  }, [isAboutRoute, currentPath]);
 
   // If we are on the About Us route, force the active section highlight to 'about-us'
   useEffect(() => {

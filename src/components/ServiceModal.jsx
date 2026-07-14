@@ -1,22 +1,31 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import { services } from '../data/services';
 import './ServiceModal.css';
 
 const WHATSAPP_BASE = 'https://wa.me/919391089897?text=';
 
-function getWhatsAppUrl(serviceKey, item, t, language) {
+function getWhatsAppUrl(serviceKey, item, t, language, sourceLocation, airportTransferType, airportCity) {
   let message = '';
 
   if (language === 'te') {
     switch (serviceKey) {
       case 'airport':
-        message = `నమస్కారం రామకృష్ణ గారు, నేను ${t(item.name)} (${t(item.city)}) కి ఎయిర్‌పోర్ట్ క్యాబ్ బుక్ చేసుకోవాలనుకుంటున్నాను.`;
+        if (airportTransferType === 'pickup') {
+          message = `నమస్కారం రామకృష్ణ గారు, నేను ${t(item.name)} (${t(item.city)}) నుండి ${t(airportCity)} కి ఎయిర్‌పోర్ట్ పికప్ క్యాబ్ బుక్ చేసుకోవాలనుకుంటున్నాను.`;
+        } else {
+          message = `నమస్కారం రామకృష్ణ గారు, నేను ${t(airportCity)} నుండి ${t(item.name)} (${t(item.city)}) కి ఎయిర్‌పోర్ట్ డ్రాప్ క్యాబ్ బుక్ చేసుకోవాలనుకుంటున్నాను.`;
+        }
         break;
       case 'localRides':
         message = `నమస్కారం రామకృష్ణ గారు, నేను ${t(item)} లో లోకల్ సిటీ క్యాబ్ బుక్ చేసుకోవాలనుకుంటున్నాను.`;
         break;
       case 'outstation':
-        message = `నమస్కారం రామకృష్ణ గారు, నేను ${t(item)} కి అవుట్‌స్టేషన్ క్యాబ్ బుక్ చేసుకోవాలనుకుంటున్నాను.`;
+        if (sourceLocation && sourceLocation.trim() !== '') {
+          message = `నమస్కారం రామకృష్ణ గారు, నేను ${t(sourceLocation)} నుండి ${t(item)} కి అవుట్‌స్టేషన్ క్యాబ్ బుక్ చేసుకోవాలనుకుంటున్నాను.`;
+        } else {
+          message = `నమస్కారం రామకృష్ణ గారు, నేను ${t(item)} కి అవుట్‌స్టేషన్ క్యాబ్ బుక్ చేసుకోవాలనుకుంటున్నాను.`;
+        }
         break;
       default:
         message = 'నమస్కారం రామకృష్ణ గారు, నేను ఒక క్యాబ్ బుక్ చేసుకోవాలనుకుంటున్నాను.';
@@ -24,13 +33,21 @@ function getWhatsAppUrl(serviceKey, item, t, language) {
   } else {
     switch (serviceKey) {
       case 'airport':
-        message = `Hi Rama Krishna, I want to book Airport Pickup/Drop at ${item.name}, ${item.city}.`;
+        if (airportTransferType === 'pickup') {
+          message = `Hi Rama Krishna, I want to book an Airport Pickup from ${item.name}, ${item.city} to ${airportCity}.`;
+        } else {
+          message = `Hi Rama Krishna, I want to book an Airport Drop from ${airportCity} to ${item.name}, ${item.city}.`;
+        }
         break;
       case 'localRides':
         message = `Hi Rama Krishna, I want to book a Local City Ride in ${item}.`;
         break;
       case 'outstation':
-        message = `Hi Rama Krishna, I want to book an Outstation Trip to ${item}.`;
+        if (sourceLocation && sourceLocation.trim() !== '') {
+          message = `Hi Rama Krishna, I want to book an Outstation Trip from ${sourceLocation} to ${item}.`;
+        } else {
+          message = `Hi Rama Krishna, I want to book an Outstation Trip to ${item}.`;
+        }
         break;
       default:
         message = 'Hi Rama Krishna, I want to book a service.';
@@ -50,9 +67,36 @@ function getPackageWhatsAppUrl(packageName, t, language) {
 export default function ServiceModal({ serviceKey, serviceData, onClose }) {
   const { t, language } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
+  const [sourceLocation, setSourceLocation] = useState('');
+  const [showSourceDropdown, setShowSourceDropdown] = useState(false);
   const [activePackageIndex, setActivePackageIndex] = useState(null);
+  
+  // Airport custom states
+  const [selectedAirport, setSelectedAirport] = useState(null);
+  const [airportTransferType, setAirportTransferType] = useState('pickup');
+  const [airportCity, setAirportCity] = useState('');
+  const [showAirportCityDropdown, setShowAirportCityDropdown] = useState(false);
+
   const modalRef = useRef(null);
   const searchInputRef = useRef(null);
+  const sourceInputRef = useRef(null);
+  const sourceContainerRef = useRef(null);
+  const airportCityInputRef = useRef(null);
+  const airportCityContainerRef = useRef(null);
+
+  // Close dropdowns on click outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (sourceContainerRef.current && !sourceContainerRef.current.contains(e.target)) {
+        setShowSourceDropdown(false);
+      }
+      if (airportCityContainerRef.current && !airportCityContainerRef.current.contains(e.target)) {
+        setShowAirportCityDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const isTemple = serviceKey === 'templePackages';
 
@@ -73,12 +117,16 @@ export default function ServiceModal({ serviceKey, serviceData, onClose }) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
 
-  // Auto-focus search input
+  // Auto-focus input on mount
   useEffect(() => {
-    if (!isTemple && searchInputRef.current) {
-      searchInputRef.current.focus();
+    if (!isTemple) {
+      if (serviceKey === 'outstation' && sourceInputRef.current) {
+        sourceInputRef.current.focus();
+      } else if (searchInputRef.current) {
+        searchInputRef.current.focus();
+      }
     }
-  }, [isTemple]);
+  }, [isTemple, serviceKey]);
 
   // Handle backdrop click
   const handleBackdropClick = () => onClose();
@@ -87,6 +135,28 @@ export default function ServiceModal({ serviceKey, serviceData, onClose }) {
   // Toggle package expansion (accordion mode: only one open at a time)
   const togglePackage = (index) => {
     setActivePackageIndex((prev) => (prev === index ? null : index));
+  };
+
+  // Filter options for the "From" source location dropdown
+  const getSourceDropdownOptions = () => {
+    if (!serviceData.items) return [];
+    const query = sourceLocation.toLowerCase().trim();
+    if (!query) return serviceData.items;
+    return serviceData.items.filter((item) =>
+      item.toLowerCase().includes(query) ||
+      t(item).toLowerCase().includes(query)
+    );
+  };
+
+  // Filter options for the "Airport City" dropdown (pickup or drop)
+  const getAirportCityDropdownOptions = () => {
+    const localCities = services?.localRides?.items || [];
+    const query = airportCity.toLowerCase().trim();
+    if (!query) return localCities;
+    return localCities.filter((item) =>
+      item.toLowerCase().includes(query) ||
+      t(item).toLowerCase().includes(query)
+    );
   };
 
   // Filter search items
@@ -112,33 +182,269 @@ export default function ServiceModal({ serviceKey, serviceData, onClose }) {
     );
   };
 
+  // ---- Render Airport Booking Form ----
+  const renderAirportForm = () => {
+    const isBookDisabled = !airportCity.trim();
+    const cityOptions = getAirportCityDropdownOptions();
+
+    return (
+      <div className="smodal__airport-form">
+        {/* Selected Airport Card Info */}
+        <div className="smodal__airport-info">
+          <button
+            className="smodal__back-btn"
+            onClick={() => {
+              setSelectedAirport(null);
+              setAirportCity('');
+            }}
+            type="button"
+            aria-label="Back to airport list"
+          >
+            <i className="fas fa-arrow-left" />
+          </button>
+          <div className="smodal__airport-details">
+            <span className="smodal__airport-label">{t('Selected Airport')}</span>
+            <h4 className="smodal__airport-name">{t(selectedAirport.name)}</h4>
+            <span className="smodal__airport-city">{t(selectedAirport.city)}</span>
+          </div>
+        </div>
+
+        {/* Transfer Type Selector (Tabs) */}
+        <div className="smodal__tabs">
+          <button
+            className={`smodal__tab-btn ${airportTransferType === 'pickup' ? 'smodal__tab-btn--active' : ''}`}
+            onClick={() => {
+              setAirportTransferType('pickup');
+              setTimeout(() => airportCityInputRef.current?.focus(), 50);
+            }}
+            type="button"
+          >
+            <i className="fas fa-plane-arrival" />
+            {t('Airport Pickup')}
+          </button>
+          <button
+            className={`smodal__tab-btn ${airportTransferType === 'drop' ? 'smodal__tab-btn--active' : ''}`}
+            onClick={() => {
+              setAirportTransferType('drop');
+              setTimeout(() => airportCityInputRef.current?.focus(), 50);
+            }}
+            type="button"
+          >
+            <i className="fas fa-plane-departure" />
+            {t('Airport Drop')}
+          </button>
+        </div>
+
+        {/* City Input (Combobox dropdown) */}
+        <div className="smodal__form-group">
+          <label className="smodal__form-label">
+            {airportTransferType === 'pickup' ? t('Drop-off City (To)') : t('Pickup City (From)')}
+            <span className="smodal__required-mark">*</span>
+          </label>
+          <div className="smodal__route-field" ref={airportCityContainerRef}>
+            <input
+              ref={airportCityInputRef}
+              type="text"
+              className="smodal__route-input"
+              placeholder={t('Enter city name...')}
+              value={airportCity}
+              onChange={(e) => {
+                setAirportCity(e.target.value);
+                setShowAirportCityDropdown(true);
+              }}
+              onFocus={() => setShowAirportCityDropdown(true)}
+            />
+            {airportCity ? (
+              <button
+                className="smodal__route-clear"
+                onClick={() => {
+                  setAirportCity('');
+                  setShowAirportCityDropdown(false);
+                }}
+                aria-label="Clear location"
+                type="button"
+              >
+                <i className="fas fa-times" />
+              </button>
+            ) : (
+              <button
+                className="smodal__route-dropdown-toggle"
+                type="button"
+                onClick={() => setShowAirportCityDropdown((prev) => !prev)}
+                aria-label="Toggle city options"
+              >
+                <i className={`fas fa-chevron-down ${showAirportCityDropdown ? 'open' : ''}`} />
+              </button>
+            )}
+
+            {showAirportCityDropdown && cityOptions.length > 0 && (
+              <div className="smodal__dropdown-menu">
+                {cityOptions.map((option, oIdx) => (
+                  <button
+                    key={oIdx}
+                    className="smodal__dropdown-item"
+                    type="button"
+                    onClick={() => {
+                      setAirportCity(option);
+                      setShowAirportCityDropdown(false);
+                    }}
+                  >
+                    {t(option)}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Book CTA */}
+        <a
+          href={isBookDisabled ? undefined : getWhatsAppUrl(serviceKey, selectedAirport, t, language, sourceLocation, airportTransferType, airportCity)}
+          target={isBookDisabled ? undefined : "_blank"}
+          rel="noopener noreferrer"
+          className={`smodal__package-book ${isBookDisabled ? 'smodal__book-btn--disabled' : ''}`}
+          style={{ marginTop: '24px' }}
+          onClick={(e) => {
+            if (isBookDisabled) {
+              e.preventDefault();
+              if (airportCityInputRef.current) {
+                airportCityInputRef.current.focus();
+                airportCityInputRef.current.classList.add('smodal__route-input--error');
+                setTimeout(() => airportCityInputRef.current.classList.remove('smodal__route-input--error'), 600);
+              }
+            }
+          }}
+        >
+          <i className="fab fa-whatsapp" />
+          {t('Book Now')}
+        </a>
+      </div>
+    );
+  };
+
   // ---- Render Search List Mode (airport, localRides, outstation) ----
   const renderSearchMode = () => {
+    if (serviceKey === 'airport' && selectedAirport) {
+      return renderAirportForm();
+    }
+
     const filtered = getFilteredItems();
+    const sourceOptions = getSourceDropdownOptions();
+    const isBookDisabled = serviceKey === 'outstation' && !sourceLocation.trim();
 
     return (
       <>
-        <div className="smodal__search">
-          <i className="fas fa-search smodal__search-icon" />
-          <input
-            ref={searchInputRef}
-            type="text"
-            className="smodal__search-input"
-            placeholder={t(serviceData.searchPlaceholder) || t('Search...')}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          {searchQuery && (
-            <button
-              className="smodal__search-clear"
-              onClick={() => setSearchQuery('')}
-              aria-label="Clear search"
-              type="button"
-            >
-              <i className="fas fa-times" />
-            </button>
-          )}
-        </div>
+        {serviceKey === 'outstation' ? (
+          <div className="smodal__route-planner">
+            <div className="smodal__route-indicators">
+              <div className="smodal__route-dot smodal__route-dot--source" />
+              <div className="smodal__route-line" />
+              <div className="smodal__route-dot smodal__route-dot--dest" />
+            </div>
+            
+            <div className="smodal__route-inputs">
+              {/* Source Input */}
+              <div className="smodal__route-field" ref={sourceContainerRef}>
+                <input
+                  ref={sourceInputRef}
+                  type="text"
+                  className="smodal__route-input"
+                  placeholder={t('Enter source city (From)...')}
+                  value={sourceLocation}
+                  onChange={(e) => {
+                    setSourceLocation(e.target.value);
+                    setShowSourceDropdown(true);
+                  }}
+                  onFocus={() => setShowSourceDropdown(true)}
+                />
+                {sourceLocation ? (
+                  <button
+                    className="smodal__route-clear"
+                    onClick={() => {
+                      setSourceLocation('');
+                      setShowSourceDropdown(false);
+                    }}
+                    aria-label="Clear source"
+                    type="button"
+                  >
+                    <i className="fas fa-times" />
+                  </button>
+                ) : (
+                  <button
+                    className="smodal__route-dropdown-toggle"
+                    type="button"
+                    onClick={() => setShowSourceDropdown((prev) => !prev)}
+                    aria-label="Toggle source options"
+                  >
+                    <i className={`fas fa-chevron-down ${showSourceDropdown ? 'open' : ''}`} />
+                  </button>
+                )}
+
+                {showSourceDropdown && sourceOptions.length > 0 && (
+                  <div className="smodal__dropdown-menu">
+                    {sourceOptions.map((option, oIdx) => (
+                      <button
+                        key={oIdx}
+                        className="smodal__dropdown-item"
+                        type="button"
+                        onClick={() => {
+                          setSourceLocation(option);
+                          setShowSourceDropdown(false);
+                        }}
+                      >
+                        {t(option)}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Destination Search */}
+              <div className="smodal__route-field">
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  className="smodal__route-input"
+                  placeholder={t(serviceData.searchPlaceholder) || t('Search destinations (To)...')}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                {searchQuery && (
+                  <button
+                    className="smodal__route-clear"
+                    onClick={() => setSearchQuery('')}
+                    aria-label="Clear search"
+                    type="button"
+                  >
+                    <i className="fas fa-times" />
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="smodal__search">
+            <i className="fas fa-search smodal__search-icon" />
+            <input
+              ref={searchInputRef}
+              type="text"
+              className="smodal__search-input"
+              placeholder={t(serviceData.searchPlaceholder) || t('Search...')}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            {searchQuery && (
+              <button
+                className="smodal__search-clear"
+                onClick={() => setSearchQuery('')}
+                aria-label="Clear search"
+                type="button"
+              >
+                <i className="fas fa-times" />
+              </button>
+            )}
+          </div>
+        )}
 
         <div className="smodal__list">
           {filtered.length === 0 ? (
@@ -159,14 +465,38 @@ export default function ServiceModal({ serviceKey, serviceData, onClose }) {
                     <span className="smodal__item-name">{t(item)}</span>
                   )}
                 </div>
-                <a
-                  href={getWhatsAppUrl(serviceKey, item, t, language)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="smodal__book-btn"
-                >
-                  {t('Book Now')}
-                </a>
+                {serviceKey === 'airport' ? (
+                  <button
+                    className="smodal__book-btn"
+                    onClick={() => {
+                      setSelectedAirport(item);
+                      setTimeout(() => airportCityInputRef.current?.focus(), 150);
+                    }}
+                    type="button"
+                  >
+                    {t('Book Now')}
+                  </button>
+                ) : (
+                  <a
+                    href={isBookDisabled ? undefined : getWhatsAppUrl(serviceKey, item, t, language, sourceLocation)}
+                    target={isBookDisabled ? undefined : "_blank"}
+                    rel="noopener noreferrer"
+                    className={`smodal__book-btn ${isBookDisabled ? 'smodal__book-btn--disabled' : ''}`}
+                    onClick={(e) => {
+                      if (isBookDisabled) {
+                        e.preventDefault();
+                        const sourceInput = document.querySelector('.smodal__route-input');
+                        if (sourceInput) {
+                          sourceInput.focus();
+                          sourceInput.classList.add('smodal__route-input--error');
+                          setTimeout(() => sourceInput.classList.remove('smodal__route-input--error'), 600);
+                        }
+                      }
+                    }}
+                  >
+                    {t('Book Now')}
+                  </a>
+                )}
               </div>
             ))
           )}

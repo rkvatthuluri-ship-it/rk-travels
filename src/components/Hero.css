@@ -67,6 +67,12 @@
   gap: 28px;
 }
 
+.hero-badge-container {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 .hero-badge {
   display: inline-flex;
   align-items: center;
@@ -85,6 +91,24 @@
 
 .hero-badge i {
   font-size: 11px;
+}
+
+.hero-badge-special {
+  background: rgba(242, 201, 76, 0.16);
+  border-color: var(--gold);
+  animation: pulse-glow-badge 3s infinite;
+}
+
+@keyframes pulse-glow-badge {
+  0% {
+    box-shadow: 0 0 0 0 rgba(242, 201, 76, 0.35);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(242, 201, 76, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(242, 201, 76, 0);
+  }
 }
 
 .hero-heading {
@@ -218,6 +242,10 @@
     align-items: center;
   }
 
+  .hero-badge-container {
+    justify-content: center;
+  }
+
   .hero-description {
     max-width: 520px;
   }
@@ -324,6 +352,19 @@
 .hero-feature-tag i {
   color: var(--gold);
   font-size: 14px;
+}
+
+.hero-feature-tag-special {
+  background: rgba(242, 201, 76, 0.08);
+  border-color: rgba(242, 201, 76, 0.4);
+  color: var(--text-main);
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(242, 201, 76, 0.03);
+}
+
+.hero-feature-tag-special:hover {
+  background: rgba(242, 201, 76, 0.16) !important;
+  border-color: var(--gold) !important;
 }
 
 @media (max-width: 992px) {
