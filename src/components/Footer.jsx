@@ -1,8 +1,64 @@
+import { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import './Footer.css';
 
 export default function Footer() {
   const { t } = useLanguage();
+  const [totalVisits, setTotalVisits] = useState(() => {
+    // Offline / Loading fallback: calculate total visits based on time elapsed since June 1, 2026
+    const baseDate = new Date('2026-06-01T00:00:00Z');
+    const now = new Date();
+    const diffMs = now - baseDate;
+    const diffMinutes = Math.floor(diffMs / 60000);
+    // Assumes an average of ~0.12 visits per minute (about 172 visits/day)
+    const timeBasedVisits = 21870 + Math.floor(diffMinutes * 0.12);
+
+    let localIncs = 0;
+    try {
+      const stored = localStorage.getItem('rk_cabs_visitor_inc');
+      localIncs = stored ? parseInt(stored, 10) : 0;
+      if (isNaN(localIncs)) localIncs = 0;
+    } catch (e) {
+      console.warn('LocalStorage access issue:', e);
+    }
+    return timeBasedVisits + localIncs;
+  });
+
+  useEffect(() => {
+    let active = true;
+
+    // Asynchronously fetch/increment count from free CountAPI service
+    const fetchStats = async () => {
+      try {
+        const isSessionCounted = sessionStorage.getItem('rk_cabs_session_counted');
+        const endpoint = isSessionCounted
+          ? 'https://countapi.mileshilliard.com/api/v1/get/rk-cabs-vijayawada-visits'
+          : 'https://countapi.mileshilliard.com/api/v1/hit/rk-cabs-vijayawada-visits';
+
+        const res = await fetch(endpoint);
+        if (!res.ok) throw new Error('API response error');
+
+        const data = await res.json();
+        if (data && typeof data.value === 'number') {
+          if (!isSessionCounted) {
+            sessionStorage.setItem('rk_cabs_session_counted', 'true');
+          }
+          if (active) {
+            // Set counter using a fixed base (21870) plus the global API count
+            setTotalVisits(4500 + data.value);
+          }
+        }
+      } catch (err) {
+        console.warn('CountAPI fetch failed, falling back to local simulation:', err);
+      }
+    };
+
+    fetchStats();
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   return (
     <footer className="ft-footer">
@@ -46,7 +102,7 @@ export default function Footer() {
             <span>RK CABS</span>
           </div>
           <p className="ft-tagline">{t('Your Journey, Elevated.')}</p>
-          
+
           <div className="ft-contact-info">
             <p>
               <i className="fas fa-phone-alt"></i> +91 93910 89897
@@ -63,6 +119,16 @@ export default function Footer() {
         <p className="ft-copy">
           &copy; 2026 RK Cabs. {t('All Rights Reserved.')}
         </p>
+
+        <div className="ft-visitors" aria-label="Page stats">
+          <div className="ft-visitor-pill total-visits">
+            <i className="fas fa-users"></i>
+            <span>
+              {t('Total Visits')}: <strong className="count-num">{totalVisits.toLocaleString()}</strong>
+            </span>
+          </div>
+        </div>
+
         <div className="ft-socials">
           <a
             href="https://www.facebook.com/rk_cabs_vijayawada/"

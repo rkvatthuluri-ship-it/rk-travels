@@ -142,7 +142,9 @@ export const translations = {
     "AI Assistant is thinking...": "AI Assistant is thinking...",
     "Hello! I am your RK Travels AI assistant. Ask me anything about outstation/local cab rates, distances, or vehicle packages!": "Hello! I am your RK Travels AI assistant. Ask me anything about outstation/local cab rates, distances, or vehicle packages!",
     "Please configure your OpenRouter API Key in the Chat Settings (gear icon in header) to start chatting.": "Please configure your OpenRouter API Key in the Chat Settings (gear icon in header) to start chatting.",
-    "API Key saved successfully!": "API Key saved successfully!"
+    "API Key saved successfully!": "API Key saved successfully!",
+    "Total Visits": "Total Visits",
+    "Online Now": "Online Now"
   },
   te: {
     // Nav Links
@@ -287,6 +289,8 @@ export const translations = {
     "AI Assistant is thinking...": "AI అసిస్టెంట్ ఆలోచిస్తోంది...",
     "Hello! I am your RK Travels AI assistant. Ask me anything about outstation/local cab rates, distances, or vehicle packages!": "నమస్కారం! నేను మీ ఆర్.కె. ట్రావెల్స్ AI సహాయకుడిని. అవుట్‌స్టేషన్/లోకల్ క్యాబ్ ధరలు, దూరాలు లేదా వాహన ప్యాకేజీల గురించి నన్ను ఏదైనా అడగండి!",
     "Please configure your OpenRouter API Key in the Chat Settings (gear icon in header) to start chatting.": "చాట్ చేయడం ప్రారంభించడానికి దయచేసి చాట్ సెట్టింగ్‌లలో (హెడర్‌లోని గేర్ చిహ్నం) మీ OpenRouter API కీని కాన్ఫిగర్ చేయండి.",
-    "API Key saved successfully!": "API కీ విజయవంతంగా సేవ్ చేయబడింది!"
+    "API Key saved successfully!": "API కీ విజయవంతంగా సేవ్ చేయబడింది!",
+    "Total Visits": "మొత్తం సందర్శనలు",
+    "Online Now": "ప్రస్తుతం ఆన్‌లైన్‌లో"
   }
 };
