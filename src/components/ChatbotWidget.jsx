@@ -169,8 +169,8 @@ export default function ChatbotWidget() {
 
       const data = await response.json();
       const botResponse = backendUrl 
-        ? data.content 
-        : (data.choices?.[0]?.message?.content || 'Sorry, I couldn\'t generate a response.');
+        ? data.content?.trim() 
+        : (data.choices?.[0]?.message?.content || 'Sorry, I couldn\'t generate a response.').trim();
       
       setMessages((prev) => [...prev, { role: 'assistant', content: botResponse }]);
     } catch (err) {

@@ -328,6 +328,7 @@ async def chat(request: ChatRequest):
             
             data = response.json()
             bot_reply = data.get("choices", [{}])[0].get("message", {}).get("content", "")
+            bot_reply = bot_reply.strip()
             print("INFO: Chatbot successfully answered query.")
             return {"role": "assistant", "content": bot_reply}
         except httpx.RequestError as e:
