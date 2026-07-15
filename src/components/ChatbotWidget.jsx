@@ -3,7 +3,7 @@ import { useLanguage } from '../context/LanguageContext';
 import './ChatbotWidget.css';
 
 const SYSTEM_PROMPT = `
-You are the official AI Travel Assistant for "RK Travels", a premium cab service provider in Andhra Pradesh and Telangana.
+You are the official AI Travel Assistant for "RK Cabs", a premium cab service provider in Andhra Pradesh and Telangana.
 Your goal is to answer customers' questions about cab rates, distances, travel packages, and bookings politely and concisely.
 
 Business Rules & Context:
@@ -34,8 +34,8 @@ Business Rules & Context:
 
 4. Guidelines for Tone and Restricting Domain:
    - Always be polite, friendly, and helpful.
-   - Restrict your answers strictly to cab services, travel estimates, tourism packages in AP/Telangana, and RK Travels.
-   - If asked questions outside of travel, tourism, or cabs (like programming, science, general news, or advice), politely decline: "I am only programmed to assist with RK Travels booking and travel questions."
+   - Restrict your answers strictly to cab services, travel estimates, tourism packages in AP/Telangana, and RK Cabs.
+   - If asked questions outside of travel, tourism, or cabs (like programming, science, general news, or advice), politely decline: "I am only programmed to assist with RK Cabs booking and travel questions."
    - Keep answers brief and conversational (maximum 2-3 sentences where possible).
    - If a customer wants to book, tell them: "You can book directly by clicking the 'Book Now' button on our services list or call Rama Krishna at +91 93910 89897."
    - Respond in the language that the user queries in (either English or Telugu).
@@ -66,7 +66,7 @@ export default function ChatbotWidget() {
     setMessages([
       {
         role: 'assistant',
-        content: t('Hello! I am your RK Travels AI assistant. Ask me anything about outstation/local cab rates, distances, or vehicle packages!')
+        content: t('Hello! I am your RK Cabs AI assistant. Ask me anything about outstation/local cab rates, distances, or vehicle packages!')
       }
     ]);
   }, [language]);
@@ -151,7 +151,7 @@ export default function ChatbotWidget() {
             'Authorization': `Bearer ${activeKey}`,
             'Content-Type': 'application/json',
             'HTTP-Referer': window.location.origin,
-            'X-Title': 'RK Travels Chatbot'
+            'X-Title': 'RK Cabs Chatbot'
           },
           body: JSON.stringify({
             model: 'openrouter/free',
@@ -217,7 +217,7 @@ export default function ChatbotWidget() {
                 <span className="chat-widget__avatar-status" />
               </div>
               <div className="chat-widget__header-info">
-                <h4 className="chat-widget__title">{t('RK Travels Assistant')}</h4>
+                <h4 className="chat-widget__title">{t('RK Cabs Assistant')}</h4>
                 <span className="chat-widget__status">{t('Online')}</span>
               </div>
             </div>
